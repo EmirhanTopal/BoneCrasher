@@ -8,22 +8,22 @@ using UnityEngine.UI;
 
 public class CharacterMovement : MonoBehaviour
 {
-    public int health = 100;
+    public float health = 100;
     private float _horizontalReadValue;
-    public bool _p1P2Control = false;
+    public bool p1P2Control = false;
     [SerializeField] private int moveSpeed;
     [SerializeField] private GameObject punchGo;
     [SerializeField] private GameObject kickGo;
-
+    [SerializeField] private CharacterMovement _p1p2CharacterMovement;
     [SerializeField]  private Image _image;
-    private Animator Animator;
+    public Animator animator;
     private Rigidbody2D _rb2d;
-    private bool verticalValue;
-    private bool isGrounded;
+    private bool _verticalValue;
+    private bool _isGrounded;
 
     private void Start()
     {
-        Animator = GetComponent<Animator>();
+        animator = GetComponent<Animator>();
         _rb2d = GetComponent<Rigidbody2D>();
         punchGo.SetActive(false);
         kickGo.SetActive(false);
@@ -34,9 +34,23 @@ public class CharacterMovement : MonoBehaviour
         JustMove();
     }
 
-    private void TakeDamage(int damage)
+    public void ApplyStun()
     {
-        _image.fillAmount -= (damage / 100);
+        StartCoroutine(GetStun(0.4f));
+    }
+    
+    private IEnumerator GetStun(float stunDuration)
+    {
+        Debug.Log("gitti gitti");
+        _p1p2CharacterMovement.GetComponent<PlayerInput>().actions.Disable();
+        yield return new WaitForSeconds(stunDuration);
+        Debug.Log("geldi geldi");
+        _p1p2CharacterMovement.GetComponent<PlayerInput>().actions.Enable();
+    }
+    
+    public void TakeDamage(float damage)
+    {
+        _image.fillAmount -= (damage / 100f);
         health -= damage;
     }
     
@@ -47,10 +61,10 @@ public class CharacterMovement : MonoBehaviour
 
     private void JustJump()
     {
-        if (isGrounded)
+        if (_isGrounded)
         {
             _rb2d.velocity = new Vector2(_rb2d.velocity.x,  5);
-            isGrounded = false;
+            _isGrounded = false;
         }
     }
 
@@ -59,8 +73,8 @@ public class CharacterMovement : MonoBehaviour
         if (other.gameObject.CompareTag("Ground"))
         {
             Debug.Log("sa");
-            Animator.SetBool("is_ground", true);
-            isGrounded = true;
+            animator.SetBool("is_ground", true);
+            _isGrounded = true;
         }
     }
 
@@ -68,8 +82,8 @@ public class CharacterMovement : MonoBehaviour
     {
         if (other.gameObject.CompareTag("Ground"))
         {
-            Animator.SetBool("is_ground", false);
-            isGrounded = false;
+            animator.SetBool("is_ground", false);
+            _isGrounded = false;
         }
     }
 
@@ -77,18 +91,18 @@ public class CharacterMovement : MonoBehaviour
     {
         if (cbx.performed)
         {
-            if (_p1P2Control && (cbx.control.name is "a" or "d"))
+            if (p1P2Control && (cbx.control.name is "a" or "d"))
             {
                 Debug.Log(cbx.control.name);
                 _horizontalReadValue = cbx.ReadValue<Vector2>().x;
-                Animator.SetBool("is_walk", true);
+                animator.SetBool("is_walk", true);
                 
             }
         }
         else if (cbx.canceled)
         {
             _horizontalReadValue = 0;
-            Animator.SetBool("is_walk", false);
+            animator.SetBool("is_walk", false);
         }
     }
 
@@ -96,17 +110,17 @@ public class CharacterMovement : MonoBehaviour
     {
         if (cbx2.performed)
         {
-            if (!_p1P2Control && (cbx2.control.name is "left"))
+            if (!p1P2Control && (cbx2.control.name is "left"))
             {
                 Debug.Log(cbx2.control.name);
                 _horizontalReadValue = cbx2.ReadValue<Vector2>().x;
-                Animator.SetBool("is_walk", true);
+                animator.SetBool("is_walk", true);
             }
         }
         else if (cbx2.canceled)
         {
             _horizontalReadValue = 0;
-            Animator.SetBool("is_walk", false);
+            animator.SetBool("is_walk", false);
         }
     }
     public void SkillsMovement(InputAction.CallbackContext cbx)
@@ -114,22 +128,22 @@ public class CharacterMovement : MonoBehaviour
         var cbxName = cbx.control.name;
         if (cbx.started)
         {
-            if (_p1P2Control)
+            if (p1P2Control)
             {
                 if (cbxName is "e")
                 {
-                    Animator.SetTrigger("trg_punch");
+                    animator.SetTrigger("trg_punch");
                     punchGo.SetActive(true);
                     Debug.Log(cbx.control.name);
                 }
                 else if (cbxName is "q")
                 {
-                    Animator.SetTrigger("trg_kick");
+                    animator.SetTrigger("trg_kick");
                     kickGo.SetActive(true);
                 }
                 else if (cbxName is "space")
                 {
-                    Animator.SetTrigger("trg_jump");
+                    animator.SetTrigger("trg_jump");
                     JustJump();
                     // if ((cbxName == "space" && cbxName == "q") || (cbxName == "buttonSouth" && cbxName == "buttonEast"))
                     // {
@@ -141,18 +155,18 @@ public class CharacterMovement : MonoBehaviour
             {
                 if (cbxName is "buttonWest")
                 {
-                    Animator.SetTrigger("trg_punch");
+                    animator.SetTrigger("trg_punch");
                     punchGo.SetActive(true);
                     Debug.Log(cbx.control.name);
                 }
                 else if (cbxName is "buttonEast")
                 {
-                    Animator.SetTrigger("trg_kick");
+                    animator.SetTrigger("trg_kick");
                     kickGo.SetActive(true);
                 }
                 else if (cbxName is "buttonSouth")
                 {
-                    Animator.SetTrigger("trg_jump");
+                    animator.SetTrigger("trg_jump");
                     JustJump();
                     // if ((cbxName == "space" && cbxName == "q") || (cbxName == "buttonSouth" && cbxName == "buttonEast"))
                     // {
