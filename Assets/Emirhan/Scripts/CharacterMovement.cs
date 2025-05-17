@@ -9,7 +9,7 @@ using UnityEngine.UI;
 public class CharacterMovement : MonoBehaviour
 {
     public float health = 100;
-    private float _horizontalReadValue;
+    public float _horizontalReadValue;
     public bool p1P2Control = false;
     [SerializeField] private int moveSpeed;
     [SerializeField] private GameObject punchGo;
