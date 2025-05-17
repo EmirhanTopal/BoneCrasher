@@ -10,6 +10,15 @@ public class CharacterMovement : MonoBehaviour
     public Rigidbody2D rb2d;
     private float _horizontalReadValue;
     [SerializeField] private int moveSpeed;
+    private Animator Animator;
+    private Rigidbody2D _rb2d;
+
+    private void Start()
+    {
+        Animator = GetComponent<Animator>();
+        _rb2d = GetComponent<Rigidbody2D>();
+    }
+
     private void Update()
     {
         JustMove();
@@ -25,12 +34,12 @@ public class CharacterMovement : MonoBehaviour
         if (cbx.performed)
         {
             _horizontalReadValue = cbx.ReadValue<Vector2>().x;
-            //walk anim
+            Animator.SetBool("is_walk", true);
         }
         else if (cbx.canceled)
         {
             _horizontalReadValue = 0;
-            //idle anim
+            Animator.SetBool("is_walk", false);
         }
     }
     public void SkillsMovement(InputAction.CallbackContext cbx)
@@ -40,20 +49,22 @@ public class CharacterMovement : MonoBehaviour
         {
             if (cbxName is "e" or "buttonWest")
             {
-                //punch anim
+                Animator.SetTrigger("trg_punch");
                 Debug.Log(cbx.control.name);
             }
             else if (cbxName is "q" or "buttonEast")
             {
-                //kick anim
+                Animator.SetTrigger("trg_kick");
             }
             else if (cbxName is "space" or "buttonSouth")
             {
-                //jump anim
-                if ((cbxName == "space" && cbxName == "q") || (cbxName == "buttonSouth" && cbxName == "buttonEast"))
-                {
-                    //jump kick
-                }
+                Animator.SetTrigger("trg_jump");
+                Animator.SetBool("is_ground", false);
+                _rb2d.velocity = new Vector2(0,);
+                // if ((cbxName == "space" && cbxName == "q") || (cbxName == "buttonSouth" && cbxName == "buttonEast"))
+                // {
+                //     Animator.SetTrigger("trg_jumpkick");
+                // }
             }
         }
     }
