@@ -23,6 +23,7 @@ public class CharacterMovement : MonoBehaviour
     private bool _isGrounded;
     public bool _control = false;
     private AudioManagers _audioManagers;
+    public bool isGeberdi = false;
     
     private void Start()
     {
@@ -36,7 +37,6 @@ public class CharacterMovement : MonoBehaviour
 
     private void Update()
     {
-        Debug.Log(health);
         JustMove();
         if (health <= 30 && !_control)
         {
@@ -53,14 +53,14 @@ public class CharacterMovement : MonoBehaviour
     // #TO-DO
     // push 
     // credit scene
-    // shake camera
+    // shake camera - done
     // iki karakterin mapte ilerlemesi
     
     private void SonNefes()
     {
         //dead anim
+        isGeberdi = true;
         FindObjectOfType<StunHandler>().StunBothPlayers(5f);
-        _audioManagers.PlayOneShotClip(_audioManagers._selaClip);
         //next scene
     }
     
