@@ -43,8 +43,27 @@ public class CharacterMovement : MonoBehaviour
             _control = true;
             CrticialHealth();
         }
+
+        if (health <= 0)
+        {
+            SonNefes();
+        }
     }
 
+    // #TO-DO
+    // push 
+    // credit scene
+    // shake camera
+    // iki karakterin mapte ilerlemesi
+    
+    private void SonNefes()
+    {
+        //dead anim
+        FindObjectOfType<StunHandler>().StunBothPlayers(5f);
+        _audioManagers.PlayOneShotClip(_audioManagers._selaClip);
+        //next scene
+    }
+    
     public void ApplyStun(float stunSeconds)
     {
         StartCoroutine(GetStun(stunSeconds));

@@ -9,6 +9,7 @@ public class AudioManagers : MonoBehaviour
     public AudioClip _punchClip;
     public AudioClip _kickClip;
     public AudioClip _jumpClip;
+    public AudioClip _selaClip;
     //public AudioClip _walkClip;
     private void Start()
     {
