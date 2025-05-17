@@ -22,14 +22,16 @@ public class CharacterMovement : MonoBehaviour
     private bool _verticalValue;
     private bool _isGrounded;
     public bool _control = false;
+    private AudioManagers _audioManagers;
     
-
     private void Start()
     {
         animator = GetComponent<Animator>();
         _rb2d = GetComponent<Rigidbody2D>();
         punchGo.SetActive(false);
         kickGo.SetActive(false);
+        _audioManagers = FindObjectOfType<AudioManagers>();
+        
     }
 
     private void Update()
@@ -39,7 +41,6 @@ public class CharacterMovement : MonoBehaviour
         if (health <= 30 && !_control)
         {
             _control = true;
-            Debug.Log("girdi");
             CrticialHealth();
         }
     }
@@ -87,7 +88,6 @@ public class CharacterMovement : MonoBehaviour
     {
         if (other.gameObject.CompareTag("Ground"))
         {
-            Debug.Log("sa");
             animator.SetBool("is_ground", true);
             _isGrounded = true;
         }
@@ -108,10 +108,8 @@ public class CharacterMovement : MonoBehaviour
         {
             if (p1P2Control && (cbx.control.name is "a" or "d"))
             {
-                Debug.Log(cbx.control.name);
                 _horizontalReadValue = cbx.ReadValue<Vector2>().x;
                 animator.SetBool("is_walk", true);
-                
             }
         }
         else if (cbx.canceled)
@@ -127,7 +125,6 @@ public class CharacterMovement : MonoBehaviour
         {
             if (!p1P2Control && (cbx2.control.name is "left"))
             {
-                Debug.Log(cbx2.control.name);
                 _horizontalReadValue = cbx2.ReadValue<Vector2>().x;
                 animator.SetBool("is_walk", true);
             }
@@ -149,7 +146,6 @@ public class CharacterMovement : MonoBehaviour
                 {
                     animator.SetTrigger("trg_punch");
                     punchGo.SetActive(true);
-                    Debug.Log(cbx.control.name);
                 }
                 else if (cbxName is "q" && _isGrounded)
                 {
@@ -159,11 +155,8 @@ public class CharacterMovement : MonoBehaviour
                 else if (cbxName is "space")
                 {
                     animator.SetTrigger("trg_jump");
+                    _audioManagers.PlayOneShotClip(_audioManagers._jumpClip);
                     JustJump();
-                    // if ((cbxName == "space" && cbxName == "q") || (cbxName == "buttonSouth" && cbxName == "buttonEast"))
-                    // {
-                    //     Animator.SetTrigger("trg_jumpkick");
-                    // }
                 }
             }
             else
@@ -172,7 +165,6 @@ public class CharacterMovement : MonoBehaviour
                 {
                     animator.SetTrigger("trg_punch");
                     punchGo.SetActive(true);
-                    Debug.Log(cbx.control.name);
                 }
                 else if (cbxName is "buttonEast")
                 {
@@ -182,11 +174,8 @@ public class CharacterMovement : MonoBehaviour
                 else if (cbxName is "buttonSouth" && _isGrounded)
                 {
                     animator.SetTrigger("trg_jump");
+                    _audioManagers.PlayOneShotClip(_audioManagers._jumpClip);
                     JustJump();
-                    // if ((cbxName == "space" && cbxName == "q") || (cbxName == "buttonSouth" && cbxName == "buttonEast"))
-                    // {
-                    //     Animator.SetTrigger("trg_jumpkick");
-                    // }
                 }
             }
             
