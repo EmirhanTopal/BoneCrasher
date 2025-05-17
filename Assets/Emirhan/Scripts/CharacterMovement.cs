@@ -15,11 +15,14 @@ public class CharacterMovement : MonoBehaviour
     [SerializeField] private GameObject punchGo;
     [SerializeField] private GameObject kickGo;
     [SerializeField] private CharacterMovement _p1p2CharacterMovement;
-    [SerializeField]  private Image _image;
+    [SerializeField] private Image healthImage;
+    [SerializeField] private Image criticalImage;
     public Animator animator;
     private Rigidbody2D _rb2d;
     private bool _verticalValue;
     private bool _isGrounded;
+    public bool _control = false;
+    
 
     private void Start()
     {
@@ -31,26 +34,38 @@ public class CharacterMovement : MonoBehaviour
 
     private void Update()
     {
+        Debug.Log(health);
         JustMove();
+        if (health <= 30 && !_control)
+        {
+            _control = true;
+            Debug.Log("girdi");
+            CrticialHealth();
+        }
     }
 
-    public void ApplyStun()
+    public void ApplyStun(float stunSeconds)
     {
-        StartCoroutine(GetStun(0.4f));
+        StartCoroutine(GetStun(stunSeconds));
+    }
+
+    public void CrticialHealth()
+    {
+        criticalImage.gameObject.SetActive(true);
+        FindObjectOfType<StunHandler>().StunBothPlayers(5f);
     }
     
     private IEnumerator GetStun(float stunDuration)
     {
-        Debug.Log("gitti gitti");
         _p1p2CharacterMovement.GetComponent<PlayerInput>().actions.Disable();
         yield return new WaitForSeconds(stunDuration);
-        Debug.Log("geldi geldi");
         _p1p2CharacterMovement.GetComponent<PlayerInput>().actions.Enable();
+        criticalImage.gameObject.SetActive(false);
     }
     
     public void TakeDamage(float damage)
     {
-        _image.fillAmount -= (damage / 100f);
+        healthImage.fillAmount -= (damage / 100f);
         health -= damage;
     }
     
@@ -130,13 +145,13 @@ public class CharacterMovement : MonoBehaviour
         {
             if (p1P2Control)
             {
-                if (cbxName is "e")
+                if (cbxName is "e" && _isGrounded)
                 {
                     animator.SetTrigger("trg_punch");
                     punchGo.SetActive(true);
                     Debug.Log(cbx.control.name);
                 }
-                else if (cbxName is "q")
+                else if (cbxName is "q" && _isGrounded)
                 {
                     animator.SetTrigger("trg_kick");
                     kickGo.SetActive(true);
@@ -153,7 +168,7 @@ public class CharacterMovement : MonoBehaviour
             }
             else
             {
-                if (cbxName is "buttonWest")
+                if (cbxName is "buttonWest" && _isGrounded)
                 {
                     animator.SetTrigger("trg_punch");
                     punchGo.SetActive(true);
@@ -164,7 +179,7 @@ public class CharacterMovement : MonoBehaviour
                     animator.SetTrigger("trg_kick");
                     kickGo.SetActive(true);
                 }
-                else if (cbxName is "buttonSouth")
+                else if (cbxName is "buttonSouth" && _isGrounded)
                 {
                     animator.SetTrigger("trg_jump");
                     JustJump();
