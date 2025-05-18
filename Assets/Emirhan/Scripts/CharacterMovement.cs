@@ -69,6 +69,18 @@ public class CharacterMovement : MonoBehaviour
         }
     }
 
+    public void Push(float pushForceX, float pushForceY, float duration = 0.2f)
+    {
+        StartCoroutine(PushRoutine(pushForceX, pushForceY, duration));
+    }
+
+    private IEnumerator PushRoutine(float pushForceX, float pushForceY, float duration)
+    {
+        canMove = false;
+        _rb2d.velocity = new Vector2(pushForceX, pushForceY);
+        yield return new WaitForSeconds(duration);
+        canMove = true;
+    }
     
     private void SonNefes()
     {
@@ -112,7 +124,7 @@ public class CharacterMovement : MonoBehaviour
     {
         if (_isGrounded)
         {
-            _rb2d.velocity = new Vector2(_rb2d.velocity.x,  5);
+            _rb2d.velocity = new Vector2(_rb2d.velocity.x,  7);
             _isGrounded = false;
         }
     }
