@@ -3,6 +3,7 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.InputSystem;
+using UnityEngine.SceneManagement;
 using UnityEngine.Serialization;
 using UnityEngine.UI;
 
@@ -11,12 +12,14 @@ public class CharacterMovement : MonoBehaviour
     public float health = 100;
     public float _horizontalReadValue;
     public bool p1P2Control = false;
-    [SerializeField] private int moveSpeed;
+    [SerializeField] private int moveSpeed = 5;
     [SerializeField] private GameObject punchGo;
     [SerializeField] private GameObject kickGo;
     [SerializeField] private CharacterMovement _p1p2CharacterMovement;
     [SerializeField] private Image healthImage;
     [SerializeField] private Image criticalImage;
+    [SerializeField] private Image criticalLine;
+    [SerializeField] private Image ko;
     public Animator animator;
     private Rigidbody2D _rb2d;
     private bool _verticalValue;
@@ -41,6 +44,7 @@ public class CharacterMovement : MonoBehaviour
             JustMove();
         if (health <= 30 && !_control)
         {
+            _p1p2CharacterMovement.moveSpeed -= 3;
             _control = true;
             CrticialHealth();
         }
@@ -48,14 +52,10 @@ public class CharacterMovement : MonoBehaviour
         if (health <= 0)
         {
             SonNefes();
+            ko.gameObject.SetActive(true);
         }
     }
-
-    // #TO-DO
-    // push - done
-    // credit scene 
-    // shake camera - done
-    // iki karakterin mapte ilerlemesi - done
+    
     
     public void SetCanMove(bool value, float blockDirection = 0f)
     {
@@ -87,7 +87,6 @@ public class CharacterMovement : MonoBehaviour
         //dead anim
         isGeberdi = true;
         FindObjectOfType<StunHandler>().StunBothPlayers(5f);
-        //next scene
     }
     
     public void ApplyStun(float stunSeconds)
@@ -98,6 +97,7 @@ public class CharacterMovement : MonoBehaviour
     public void CrticialHealth()
     {
         criticalImage.gameObject.SetActive(true);
+        criticalLine.gameObject.SetActive(true);
         FindObjectOfType<StunHandler>().StunBothPlayers(3.25f);
     }
     
@@ -107,6 +107,8 @@ public class CharacterMovement : MonoBehaviour
         yield return new WaitForSeconds(stunDuration);
         _p1p2CharacterMovement.GetComponent<PlayerInput>().actions.Enable();
         criticalImage.gameObject.SetActive(false);
+        criticalLine.gameObject.SetActive(false);
+
     }
     
     public void TakeDamage(float damage)

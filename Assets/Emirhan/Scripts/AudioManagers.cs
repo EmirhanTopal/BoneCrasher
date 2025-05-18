@@ -2,6 +2,7 @@ using System;
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.SceneManagement;
 
 public class AudioManagers : MonoBehaviour
 {
@@ -32,9 +33,17 @@ public class AudioManagers : MonoBehaviour
             if (!isSela)
             {
                 _audioSource.PlayOneShot(_selaClip);
+                //KO image
                 isSela = true;
+                StartCoroutine(WaitNextScene());
             }
         }
+    }
+
+    private IEnumerator WaitNextScene()
+    {
+        yield return new WaitForSeconds(5);
+        SceneManager.LoadScene("CreditScene");
     }
     public void PlayOneShotClip(AudioClip audioClip)
     {

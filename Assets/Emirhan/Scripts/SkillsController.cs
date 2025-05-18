@@ -43,14 +43,14 @@ public class SkillsController : MonoBehaviour
             {
                 //kapalı sağ (-1 sola ittiricem) açık sol (sağa ittiricem 1)
                 _audioManagers.PlayOneShotClip(_audioManagers._punchClip);
-                _characterMovement.TakeDamage(5);
-                _enemy.GetComponent<Rigidbody2D>().velocity = new Vector2(_enemyDir * 50f, 3f);
+                _characterMovement.TakeDamage(3);
+                _enemy.GetComponent<Rigidbody2D>().velocity = new Vector2(_enemyDir * 50f, 0);
                 _cameraShake.ShakeFunc(0.2f, 0.2f);
             }
             else if (this.name == "kickRef")
             {
                 _audioManagers.PlayOneShotClip(_audioManagers._kickClip);
-                _characterMovement.TakeDamage(10);
+                _characterMovement.TakeDamage(5);
                 _enemy.GetComponent<Rigidbody2D>().velocity = new Vector2(_enemyDir * 50f, 3f);
                 _cameraShake.ShakeFunc(0.3f, 0.3f);
             }
