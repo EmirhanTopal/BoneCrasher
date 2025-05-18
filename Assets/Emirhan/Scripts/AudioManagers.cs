@@ -12,11 +12,11 @@ public class AudioManagers : MonoBehaviour
     public AudioClip _selaClip;
     private bool isSela = false;
 
-    private CharacterMovement _characterMovement;
+    [SerializeField] private CharacterMovement _p1;
+    [SerializeField] private CharacterMovement _p2;
     //public AudioClip _walkClip;
     private void Start()
     {
-        _characterMovement = FindObjectOfType<CharacterMovement>();
         _audioSource = GetComponent<AudioSource>();
     }
 
@@ -27,7 +27,7 @@ public class AudioManagers : MonoBehaviour
 
     private void OnlySela()
     {
-        if (_characterMovement.isGeberdi)
+        if (_p1.isGeberdi || _p2.isGeberdi)
         {
             if (!isSela)
             {

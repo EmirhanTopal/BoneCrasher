@@ -24,6 +24,7 @@ public class CharacterMovement : MonoBehaviour
     public bool _control = false;
     private AudioManagers _audioManagers;
     public bool isGeberdi = false;
+    public bool canMove = true;
     
     private void Start()
     {
@@ -32,12 +33,12 @@ public class CharacterMovement : MonoBehaviour
         punchGo.SetActive(false);
         kickGo.SetActive(false);
         _audioManagers = FindObjectOfType<AudioManagers>();
-        
     }
 
     private void Update()
     {
-        JustMove();
+        if(canMove)
+            JustMove();
         if (health <= 30 && !_control)
         {
             _control = true;
@@ -51,10 +52,23 @@ public class CharacterMovement : MonoBehaviour
     }
 
     // #TO-DO
-    // push 
-    // credit scene
+    // push - done
+    // credit scene 
     // shake camera - done
-    // iki karakterin mapte ilerlemesi
+    // iki karakterin mapte ilerlemesi - done
+    
+    public void SetCanMove(bool value, float blockDirection = 0f)
+    {
+        canMove = value;
+
+        // Eğer hareket engellendiyse, o yöne doğru yürümeye çalışıyorsa durdur
+        if (!canMove && Mathf.Sign(_horizontalReadValue) == blockDirection)
+        {
+            _horizontalReadValue = 0f;
+            animator.SetBool("is_walk", false);
+        }
+    }
+
     
     private void SonNefes()
     {
@@ -72,7 +86,7 @@ public class CharacterMovement : MonoBehaviour
     public void CrticialHealth()
     {
         criticalImage.gameObject.SetActive(true);
-        FindObjectOfType<StunHandler>().StunBothPlayers(5f);
+        FindObjectOfType<StunHandler>().StunBothPlayers(3.25f);
     }
     
     private IEnumerator GetStun(float stunDuration)

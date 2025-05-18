@@ -46,3 +46,15 @@ TagManager:
   - name: Default
     uniqueID: 0
     locked: 0
+  - name: bar
+    uniqueID: 2165870541
+    locked: 0
+  - name: shadow
+    uniqueID: 586304945
+    locked: 0
+  - name: health
+    uniqueID: 2341948465
+    locked: 0
+  - name: empty
+    uniqueID: 139804989
+    locked: 0
