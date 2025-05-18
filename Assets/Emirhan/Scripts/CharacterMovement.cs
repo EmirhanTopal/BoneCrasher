@@ -185,16 +185,17 @@ public class CharacterMovement : MonoBehaviour
     public void SkillsMovement(InputAction.CallbackContext cbx)
     {
         var cbxName = cbx.control.name;
+        Debug.Log(cbx.control.name);
         if (cbx.started)
         {
             if (p1P2Control)
             {
-                if (cbxName is "e" && _isGrounded)
+                if (cbxName is "8" && _isGrounded)
                 {
                     animator.SetTrigger("trg_punch");
                     punchGo.SetActive(true);
                 }
-                else if (cbxName is "q" && _isGrounded)
+                else if (cbxName is "9" && _isGrounded)
                 {
                     animator.SetTrigger("trg_kick");
                     kickGo.SetActive(true);
